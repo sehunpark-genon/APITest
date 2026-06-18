@@ -50,6 +50,19 @@ def register_common_routes(
         req: TargetRegisterRequest,
         conn: PgConn = Depends(get_db),
     ):
+        """
+        Discovery 로 수집된 `collection_items` 를 정기 동기화 대상(`collection_targets`)으로 등록합니다.
+
+        **옵션**
+
+        | 파라미터 | 기본값 | 설명 |
+        |---|---|---|
+        | `register_all` | `false` | `true`=collection_items 전체 등록(이미 등록된 것 포함 재등록) / `false`=아직 targets 에 없는 신규 항목만 |
+        | `limit` | `null` | 등록할 최대 건수 (테스트용). 미설정 시 조건 만족 전체 |
+        | `only_active_items` | `true` | `true`=status='ACTIVE' 인 항목만 대상 / `false`=모든 상태 포함 |
+
+        **응답**: `registered_count`(신규 등록) · `skipped_count`(이미 존재) · `target_count`(전체 ACTIVE target)
+        """
         result = register_targets(
             source, conn,
             limit=req.limit,
@@ -65,6 +78,29 @@ def register_common_routes(
         req: SyncRequest,
         conn: PgConn = Depends(get_db),
     ):
+        """
+        `collection_targets` 대상의 상세 API 를 호출해 `documents` 에 저장합니다.
+        `content_hash`(SHA256) 비교로 신규/변경/동일을 판정하고, 변경 시 이전 버전을
+        `document_versions` 에 보존합니다.
+
+        **대상 선별 옵션** (기본: 아직 상세 수집 안 된 pending 대상부터)
+
+        | 파라미터 | 기본값 | 설명 |
+        |---|---|---|
+        | `limit` | `5` | 이번 sync 에서 처리할 최대 건수 |
+        | `pending_only` | `true` | `true`=`last_detail_collected_at` 이 NULL 이거나 documents 행이 없는 대상만 |
+        | `force_resync` | `false` | `true`=이미 동기화된 대상도 상세 API 재호출 → hash 비교(동일=unchanged, 변경=updated) |
+        | `stale_after_days` | `null` | 마지막 동기화가 N일보다 오래된 대상도 재동기화 대상에 포함 |
+
+        **응답 카운트**
+
+        | 필드 | 설명 |
+        |---|---|
+        | `target_count` | 전체 ACTIVE target 수 |
+        | `pending_count` | 실행 후 잔여 pending(미수집) target 수 |
+        | `synced_count` | 이번 실행 처리 건수 (= inserted+updated+unchanged) |
+        | `inserted_count` / `updated_count` / `unchanged_count` / `failed_count` | 결과별 건수 |
+        """
         collector = collector_factory()
         result = sync_details(
             source, collector, conn,
