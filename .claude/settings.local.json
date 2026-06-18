@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -X POST http://localhost:8000/collect/law_text/discover -H 'Content-Type: application/json' -d '{\"query\": \"근로기준법\", \"page\": 1, \"display\": 3}')",
+      "Bash(curl -s -X POST http://localhost:8000/collect/law_text/sync -H 'Content-Type: application/json' -d '{\"limit\": 3}')",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s http://localhost:8000/collect/law_text/documents/234693)",
+      "Bash(curl -s http://localhost:8000/collect/law_text/items?limit=3)",
+      "Bash(curl -s \"http://localhost:8000/collect/law_text/items?limit=3\")",
+      "Bash(curl -s http://localhost:8000/health)",
+      "Bash(curl -s http://localhost:8000/openapi.json)",
+      "Bash(python3 -c \"import sys, json; d=json.load\\(sys.stdin\\); print\\('\\\\n'.join\\(sorted\\(d['paths'].keys\\(\\)\\)\\)\\)\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('fetched:',d['fetched_count'],'inserted:',d['inserted_count']\\); print\\('filters:',json.dumps\\(d['requested_filters'],ensure_ascii=False\\)\\); print\\('sample:',[s['title'] for s in d['sample_items']]\\)\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('fetched:',d['fetched_count'],'inserted:',d['inserted_count']\\); print\\('sample:',[s['title'] for s in d['sample_items']]\\)\")",
+      "Bash(curl -s -X POST http://localhost:8000/law_text/sync -H 'Content-Type: application/json' -d '{\"limit\":5}')",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('synced:',d['synced_count'],'inserted:',d['inserted_count'],'updated:',d['updated_count'],'unchanged:',d['unchanged_count'],'failed:',d['failed_count']\\)\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('inserted:',d['inserted_count'],'updated:',d['updated_count'],'unchanged:',d['unchanged_count']\\)\")",
+      "Bash(uv run python -c ' *)",
+      "Bash(cd /Users/tp9ns/API_test *)",
+      "Bash(docker exec *)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('fetched:',d['fetched_count'],'| requested_filters:',json.dumps\\(d['requested_filters'],ensure_ascii=False\\)\\)\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\({k:d[k] for k in ['target_count','pending_count','synced_count','inserted_count','updated_count','unchanged_count','failed_count']}\\)\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\({k:d[k] for k in ['target_count','pending_count','synced_count','inserted_count','updated_count','unchanged_count']}\\)\")",
+      "Bash(pkill -f \"uvicorn api.app:app\")",
+      "Bash(uv run *)"
+    ],
+    "additionalDirectories": [
+      "/tmp"
+    ]
+  }
+}

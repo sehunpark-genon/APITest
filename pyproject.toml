@@ -1,0 +1,20 @@
+[project]
+name = "api-collect"
+version = "0.1.0"
+description = "외부 API 원본 수집 시스템 (DMZ 단계) — 법제처·복지로·서민금융진흥원 공공 API"
+requires-python = ">=3.11"
+dependencies = [
+    "requests>=2.32.3",
+    "xmltodict>=0.14.2",
+    "psycopg2-binary>=2.9.10",
+    "python-dotenv>=1.0.1",
+    "fastapi>=0.137.1",
+    "uvicorn[standard]>=0.49.0",
+]
+
+[tool.uv]
+# uv sync         → 의존성 설치 (최초 or requirements 변경 후)
+# uv run python main.py        → 가상환경 없이 바로 실행
+# uv add <패키지>  → 패키지 추가 (pyproject.toml + uv.lock 자동 갱신)
+# uv remove <패키지>           → 패키지 제거
+# uv lock --upgrade            → 모든 패키지 최신 버전으로 lock 갱신
